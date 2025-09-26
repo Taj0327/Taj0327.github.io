@@ -1,19 +1,12 @@
 {
   "basics": {
-    "name": "Albert Einstein",
-    "label": "Scientist",
+    "name": "Aoji Tang",
+    "label": "",
     "image": "",
-    "email": "albert@einstein.de",
-    "phone": "(912) 123-4567",
-    "url": "https://alshedivat.github.io/al-folio/",
+    "email": "ajtang@unc.edu",
+    "phone": "(984) 291-2653",
+    "url": "https://Taj0327.github.io",
     "summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time",
-    "location": {
-      "address": "2712 Broadway St",
-      "postalCode": "CA 94115",
-      "city": "San Francisco",
-      "countryCode": "US",
-      "region": "California"
-    },
     "profiles": [
       {
         "network": "Twitter",
@@ -22,7 +15,7 @@
       }
     ]
   },
-  "work": [
+  "_work": [
     {
       "name": "Institute for Advanced Study, Princeton University",
       "position": "Professor of Theoretical Physics",
@@ -33,7 +26,7 @@
       "highlights": ["Relativity"]
     }
   ],
-  "volunteer": [
+  "_volunteer": [
     {
       "organization": "People's Climate March",
       "location": "Zurich, Switzerland",
@@ -47,27 +40,29 @@
   ],
   "education": [
     {
-      "institution": "University of Zurich, Zurich, Switzerland",
-      "location": "Zurich, Switzerland",
-      "url": "https://www.uzh.ch/",
-      "area": "Software Development",
-      "studyType": "PhD",
-      "startDate": "1905-01-01",
-      "endDate": "1905-01-01",
-      "score": "10",
-      "courses": ["Theory of Relativity"]
-    }
-  ],
-  "awards": [
+      "institution": "University of North Carolina at Chapel Hill",
+      "major": "Statistics",
+      "studyType": "Master of Science",
+      "startDate": "2024-08",
+      "endDate": "2025-12",
+      "_courses": ["Optimization I & II", "Probability Theory", "Theoretical Statistics", "Optimization for machine learning and data science"]
+    },
     {
-      "title": "Nobel Prize in Physics",
-      "date": "1921-11-01",
-      "awarder": "Royal Swedish Academy of Sciences",
-      "url": "https://www.nobelprize.org/prizes/physics/1921/einstein/biographical/",
-      "summary": "The Nobel Prizes are five separate prizes that, according to Alfred Nobel's will of 1895, are awarded to 'those who, during the preceding year, have conferred the greatest benefit to humankind.'"
+      "institution": "Fudan University",
+      "major": "Mathematics",
+      "studyType": "Bachelor of Science",
+      "startDate": "2019-09",
+      "endDate": "2024-06",
+      "_courses": ["Real Analysis", "Linear Algrbra"]
     }
   ],
-  "certificates": [
+  "awards & scholarships": [
+    {
+      "title": "MS Academic Scholarship ($5,300)",
+      "date": "2025-Jun"
+    }
+  ],
+  "_certificates": [
     {
       "name": "Machine Learning",
       "date": "2018-01-01",
@@ -111,7 +106,7 @@
       "icon": "fa-solid fa-clipboard-check"
     }
   ],
-  "publications": [
+  "_publications": [
     {
       "name": "Zur Elektrody/namik bewegter Körper",
       "publisher": "Annalen der Physik",
@@ -134,7 +129,7 @@
       "summary": "The publication of the theory of general relativity made him internationally famous. He was professor of physics at the universities of Zurich (1909–1911) and Prague (1911–1912), before he returned to ETH Zurich (1912–1914)."
     }
   ],
-  "skills": [
+  "_skills": [
     {
       "name": "Physics",
       "level": "Master",
