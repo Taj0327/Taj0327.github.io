@@ -5,8 +5,7 @@
     "image": "",
     "email": "ajtang@unc.edu",
     "phone": "(984) 291-2653",
-    "url": "https://Taj0327.github.io",
-    "_summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time"
+    "url": "https://Taj0327.github.io"
   },
   "_work": [
     {
@@ -34,73 +33,27 @@
   "education": [
     {
       "institution": "University of North Carolina at Chapel Hill",
-      "major": "Statistics",
-      "studyType": "Master of Science",
+      "studyType": "MS in Statistics",
       "startDate": "2024-08",
       "endDate": "2025-12",
       "_courses": ["Optimization I & II", "Probability Theory", "Theoretical Statistics", "Optimization for machine learning and data science"]
     },
     {
       "institution": "Fudan University",
-      "major": "Mathematics",
-      "studyType": "Bachelor of Science",
+      "studyType": "BS in Mathematics",
       "startDate": "2019-09",
       "endDate": "2024-06",
       "_courses": ["Real Analysis", "Linear Algrbra"]
     }
   ],
-  "scholarships": [
+  "awards": [
     {
-      "title": "MS Academic Scholarship ($5,300)",
+      "title": "Master Academic Scholarship ($5,300) from UNC STOR department",
       "date": "2025-Jun"
     },
     {
-      "title": "Academic Scholarship from maths department, Fudan University",
+      "title": "Academic Scholarships from Fudan University Maths department",
       "date": "2023-Aug; 2022-Aug"
-    }
-  ],
-  "_certificates": [
-    {
-      "name": "Machine Learning",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-location-dot"
-    },
-    {
-      "name": "Quantum Computing",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-tag"
-    },
-    {
-      "name": "Quantum Information",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-envelope"
-    },
-    {
-      "name": "Quantum Cryptography",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-hashtag"
-    },
-    {
-      "name": "Quantum Communication",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-calendar"
-    },
-    {
-      "name": "Quantum Teleportation",
-      "date": "2018-01-01",
-      "issuer": "Stanford University",
-      "url": "https://example.com",
-      "icon": "fa-solid fa-clipboard-check"
     }
   ],
   "_publications": [
@@ -173,9 +126,23 @@
     }
   ],
   "interests": [
-    {
-      "name": "Tennis",
-      "icon": "🎾"
-    }
-  ]
+  {
+    "name": "Optimization",
+    "icon": "fas fa-calculator",
+    "keywords": [
+      "Convex & Nonconvex Analysis",
+      "Stochastic Approximation",
+      "Large-scale Problems"
+    ]
+  },
+  {
+    "name": "Personal",
+    "icon": "fas fa-music",
+    "keywords": [
+      "Piano",
+      "Tennis",
+      "Running"
+    ]
+  }
+]
 }
