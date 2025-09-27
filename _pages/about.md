@@ -5,8 +5,8 @@ permalink: /
 <!-- subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Motto. Etc. -->
 
 profile:
-  align: right
-  image: prof_pic.jpg
+  align: left
+  image: self_pic.jpeg
   image_circular: false # crops the image to make it circular
   <!-- more_info: >
     <p>555 your office number</p>
@@ -14,7 +14,7 @@ profile:
     <p>Your City, State 12345</p> -->
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
-social: true # includes social icons at the bottom of the page
+social: false # includes social icons at the bottom of the page
 
 announcements:
   enabled: false # includes a list of news items
@@ -27,10 +27,6 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-Hi there! Welcome to my page. I'm Aoji Tang, a Master's student in Statistics at the University of North Carolina at Chapel Hill. My research interests lie in (stochastic) nonlinear optimization, constrained optimization and distributed optimization.
+Hi there! Welcome to my page. I'm Aoji Tang, an MS student in [Statistics](https://stor.unc.edu) at the University of North Carolina at Chapel Hill. My research interests lie in (stochastic) nonlinear optimization, constrained optimization and distributed optimization. My advisor is [Prof. Michael J. O'Neill](https://michaeljoneill.github.io/). I'm currently seeking PhD opportunities in Fall 2026. Please feel free to reach out to me.
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
-
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
-
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+Before coming to UNC, I obtained my BS degree in mathematics from [Fudan University](https://www.fudan.edu.cn/en/) in 2023. I also spent my 23Fall semester as an exchange student here at UNC STOR department.

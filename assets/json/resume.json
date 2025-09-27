@@ -6,14 +6,7 @@
     "email": "ajtang@unc.edu",
     "phone": "(984) 291-2653",
     "url": "https://Taj0327.github.io",
-    "summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time",
-    "profiles": [
-      {
-        "network": "Twitter",
-        "username": "AlbertEinstein",
-        "url": "https://twitter.com/AlbertEinstein"
-      }
-    ]
+    "_summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time"
   },
   "_work": [
     {
@@ -56,10 +49,14 @@
       "_courses": ["Real Analysis", "Linear Algrbra"]
     }
   ],
-  "awards & scholarships": [
+  "scholarships": [
     {
       "title": "MS Academic Scholarship ($5,300)",
       "date": "2025-Jun"
+    },
+    {
+      "title": "Academic Scholarship from maths department, Fudan University",
+      "date": "2023-Aug; 2022-Aug"
     }
   ],
   "_certificates": [
@@ -144,33 +141,7 @@
       ]
     }
   ],
-  "languages": [
-    {
-      "language": "German",
-      "fluency": "Native speaker",
-      "icon": ""
-    },
-    {
-      "language": "English",
-      "fluency": "Fluent",
-      "icon": ""
-    }
-  ],
-  "interests": [
-    {
-      "name": "Physics",
-      "icon": "fa-solid fa-tag",
-      "keywords": [
-        "Quantum Mechanics",
-        "Quantum Computing",
-        "Quantum Information",
-        "Quantum Cryptography",
-        "Quantum Communication",
-        "Quantum Teleportation"
-      ]
-    }
-  ],
-  "references": [
+  "_references": [
     {
       "name": "Professor John Doe",
       "icon": "fa-solid fa-laptop",
@@ -184,12 +155,27 @@
   ],
   "projects": [
     {
-      "name": "Quantum Computing",
-      "summary": "Quantum computing is the use of quantum-mechanical phenomena such as superposition and entanglement to perform computation. Computers that perform quantum computations are known as quantum computers.",
-      "highlights": ["Quantum Teleportation", "Quantum Cryptography"],
-      "startDate": "2018-01-01",
-      "endDate": "2018-01-01",
-      "url": "https://example.com"
+      "name": "Enron corpus analysis",
+      "summary": "Analyzed the Enron corpus to find that the average email length is 138 words, and the most common word is 'the'.",
+      "highlights": ["Data Science", "Semantic Analysis"],
+      "startDate": "2024-08-20",
+      "endDate": "2024-12-05"
+    }
+  ],
+  "languages": [
+    {
+      "language": "Mandarin",
+      "fluency": "Native speaker"
+    },
+    {
+      "language": "English",
+      "fluency": "Fluent"
+    }
+  ],
+  "interests": [
+    {
+      "name": "Tennis",
+      "icon": "🎾"
     }
   ]
 }
