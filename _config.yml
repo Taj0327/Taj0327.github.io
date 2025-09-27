@@ -188,7 +188,6 @@ exclude:
   - README.md
   - readme_preview/
   - vendor
-  - _posts/
   - _news/
   - _pages/teaching.md
 keep_files:
