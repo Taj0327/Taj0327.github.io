@@ -130,23 +130,15 @@
     }
   ],
   "interests": [
-  {
-    "name": "Optimization",
-    "icon": "fas fa-calculator",
-    "keywords": [
-      "Convex & Nonconvex Analysis",
-      "Stochastic Approximation",
-      "Large-scale Problems"
-    ]
-  },
-  {
-    "name": "Personal",
-    "icon": "fas fa-music",
-    "keywords": [
-      "Piano",
-      "Tennis",
-      "Running"
-    ]
-  }
-]
+    {
+      "name": "Optimization",
+      "icon": "fas fa-calculator",
+      "keywords": ["Convex & Nonconvex Analysis", "Stochastic Approximation", "Large-scale Problems"]
+    },
+    {
+      "name": "Personal",
+      "icon": "fas fa-music",
+      "keywords": ["Piano", "Tennis", "Running"]
+    }
+  ]
 }

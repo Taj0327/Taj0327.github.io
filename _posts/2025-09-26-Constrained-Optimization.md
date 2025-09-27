@@ -15,7 +15,7 @@ Welcome! This post contains some notes on constrained optimization, mainly based
 
 Constrained optimization problems are optimization problems that include constraints on the variables. A general constrained optimization problem can be formulated as follows:
 \[\begin{aligned}
-& \min_{x \in \mathbb{R}^n} f(x) \\
+& \min\_{x \in \mathbb{R}^n} f(x) \\
 & \text{subject to} \\
 & g_i(x) \leq 0, \quad i = 1, \ldots, m \\
 & h_j(x) = 0, \quad j = 1, \ldots, p
