@@ -7,6 +7,8 @@ tags: formatting charts
 categories: optimization
 chart:
   plotly: true
+published: false
+include: false
 ---
 
 Welcome! This post contains some notes on constrained optimization, mainly based on the book [Numerical Optimization](https://link.springer.com/book/10.1007/978-0-387-40065-5) by Jorge Nocedal and Stephen Wright.
