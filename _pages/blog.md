@@ -8,7 +8,7 @@ nav_order: 1
 
 <div class="post">
 
-  {% assign postlist = site.posts %}
+  {% assign postlist = site.posts | where_exp: 'post', 'post.include != false' %}
 
   {% if postlist and postlist.size > 0 %}
     <ul class="post-list">
@@ -31,4 +31,3 @@ nav_order: 1
   {% endif %}
 
 </div>
-
