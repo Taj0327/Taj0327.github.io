@@ -34,6 +34,6 @@ _styles: |
   }
 ---
 
-Hi there! Welcome to my page. I'm Aoji (Ow-Gee) Tang. This fall, I will join the [Department of Industrial and Systems Engineering](https://engineering.lehigh.edu/ise) at Lehigh University as a PhD student. My research interests lie in (stochastic) nonlinear optimization, constrained optimization, and distributed optimization. Please feel free to reach out to me.
+Hi there! Welcome to my page. I'm Aoji (Ow-Gee) Tang. I am a first-year PhD student of the [Department of Industrial and Systems Engineering](https://engineering.lehigh.edu/ise) at Lehigh University. My research interests lie in (stochastic) nonlinear optimization, constrained optimization, and distributed optimization. Please feel free to reach out to me.
 
 Before coming to Lehigh, I completed my MS degree in [Statistics](https://stor.unc.edu) under supervision of [Prof. Michael J. O'Neill](https://michaeljoneill.github.io/) at UNC-Chapel Hill in 2025 and obtained my BS degree in mathematics from [Fudan University](https://www.fudan.edu.cn/en/) in 2023.
