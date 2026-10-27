@@ -2,155 +2,110 @@
 layout: post
 date: 2025-12-07
 title: "An inexact two-stepsize stochastic SQP method"
-description: "This post introduces an inexact two-stepsize stochastic sequential quadratic programming (SQP) method for solving constrained optimization problems with noisy objective functions and deterministic constraints."
-categories: optimization 
+description: "A short introduction to our stochastic SQP method for equality constraints with possibly rank-deficient Jacobians."
+categories: optimization
 _styles: |
-  .post-content p {
-    text-align: justify;
-    text-justify: inter-word;
-    hyphens: auto;
+  #markdown-content table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  #markdown-content th,
+  #markdown-content td {
+    border: 1px solid #cbd5e1;
+    padding: 0.55rem 0.7rem;
+    vertical-align: top;
+  }
+  html[data-theme="dark"] #markdown-content th,
+  html[data-theme="dark"] #markdown-content td {
+    border-color: #52525b;
   }
 ---
 
-{: .justified}
+*Updated October 2026. This post summarizes [our April 2026 preprint](https://arxiv.org/abs/2604.14351), joint work with Michael J. O'Neill. The [earlier master's essay]({{ '/assets/pdf/Masters_Essay_Aoji_Tang.pdf' | relative_url }}) contains a previous version.*
 
-This blog post introduces an inexact two-stepsize stochastic SQP method for nonlinear optimization problems with rank deficient constraint Jacobians. The problem is formulated as follows:
+## The problem
 
-$$
-\min_{x \in \mathbb{R}^n} f(x) = \mathbb{E}[F(x,\omega)] \quad \text{s.t.} \quad c(x) = 0,
-$$
-
-where $\omega$ is a random variable associated with probability space $(\Omega, \mathcal{F}, \mathcal{P})$ and $c(x)$ represents deterministic equality constraints. We assume that $f$ and $c$ are differentiable and have Lipschitz continuous gradients. Also, we assume that the constraint Jacobian $J_k = \nabla c(x)^T$ may be rank deficient, i.e., the Linear Independence Constraint Qualification (LICQ) may not hold. For the stochasticity part, we only have access to an unbiased estimate of the objetive gradient $\nabla f(x_k)$ at each iteration $k$. Specifically, we can obtain a stochastic gradient estimate $g_k$ satisfying $\mathbb{E}[g_k] = \nabla f(x_k)$ and $$\mathbb{E}[\|g_k - \nabla f(x_k)\|_2^2] \leq M.$$
-
-### Algorithm Description
-
-Traditionally, SQP methods solve a sequence of quadratic programming (QP) subproblems to generate search directions $d_k$, and update the iterates via $x_{k+1} = x_k + \alpha_k d_k$, where $\alpha_k$ is some stepsize. The nonlinear CG method is often used to solve the QP subproblems approximately. However, when the constraint Jacobian is rank deficient, the standard SQP method may fail to find a feasible direction. To address this problem, we use the Byrd-Omojokun framework to decompose the step direction $d_k$ into a normal component $v_k$ and a tangential component $u_k$. The normal step $v_k$ is computed via a trust-region subproblem, while the tangential step $u_k$ is obtained by solving a quadratic programming (QP) subproblem with iterative linear solvers (such as MINRES or CG).
-
-More specifically, the normal step $v_k$ is computed by solving the following trust-region subproblem:
+We study equality-constrained optimization with a stochastic objective:
 
 $$
-\min_{v \in \mathbb{R}^n} \|c(x_k) + J_k^T v\|^2 \quad \text{s.t.} \quad \|v\| \leq \omega \|J_k^Tc_k\|_2,
+\min_{x\in\mathbb{R}^n} f(x)=\mathbb{E}[F(x,\xi)]
+\qquad\text{subject to}\qquad c(x)=0.
 $$
 
-where $\omega$ is a positive constant. Taking a symmetric matrix $H_k\in\mathbb{S}^n$ that satisfies . The tangential step $u_k$ is computed by solving the following Newton-type system:
+Here $c:\mathbb{R}^n\to\mathbb{R}^m$ is deterministic and $\xi$ is the random variable. At iteration $k$, let $c_k=c(x_k)$ and $J_k=\nabla c(x_k)^T\in\mathbb{R}^{m\times n}$. We can evaluate $c_k$ and $J_k$, but use a stochastic estimate $g_k$ of $\nabla f(x_k)$. The analysis assumes that $g_k$ is conditionally unbiased and has bounded variance. It also allows $J_k$ to be rank deficient, a situation that can make a standard SQP linear system singular.
+
+Rank deficiency can arise when some constraints are locally redundant. In that case, insisting that every linearized constraint be solved exactly may not produce a usable search direction. Separating progress toward the constraints from progress on the objective provides a way to continue without assuming full row rank at every iteration.
+
+## How the method works
+
+We split the search direction into a **normal step** $v_k$, which reduces linearized constraint violation, and a **tangential step** $u_k$, which uses the stochastic gradient. The normal step approximately solves
 
 $$
-\begin{bmatrix}
-    H_k & J_k^T \\
-    J_k & 0
-\end{bmatrix} \begin{bmatrix}
-    u_k \\ y_{k}
-\end{bmatrix} = \begin{bmatrix}
-    -g_k + H_k v_k \\ 0
-\end{bmatrix}.
+\min_{v\in\mathbb{R}^n}\ \frac12\|c_k+J_kv\|^2
+\qquad\text{subject to}\qquad
+\|v\|\leq\omega\|J_k^Tc_k\|,
 $$
 
-When the subproblem is solved exactly, the solution $u_k$ lies in the null space of $J_k$, i.e., $J_ku_k = 0$, ensuring that the tangential step does not affect the feasibility achieved by the normal step. However, since we only have access to a stochastic gradient estimate $g_k$, we allow inexact solutions to the Newton-type system. Specifically, we use a residual stopping criterion to terminate the iterative solver:
+where $\omega>0$ controls its size. We only require sufficient decrease, rather than an exact solution. In particular, the normal step can help even when the linearized constraints cannot be satisfied exactly.
+
+The tangential step approximately minimizes a quadratic model over the null space of $J_k$:
 
 $$
-\|r_k\| \leq \gamma_r \beta_k \quad \& \quad \|\rho_k\| \leq \gamma_{\rho} \beta_k,
+\min_u\ (g_k+H_kv_k)^Tu+\frac12u^TH_ku \quad \mathrm{s.t.} \quad J_ku=0
 $$
 
-where $(r_k, \rho_k)$ is the residual pair of the system:
+The symmetric matrix $H_k$ is chosen independently of the current gradient sample and is uniformly positive definite on this null space. If $u_k$ is exact, $J_ku_k=0$, so it does not change the *linearized* constraint residual. For an inexact solve, we stop when the linear-system residuals meet tolerances proportional to a parameter $\beta_k$; the analysis accounts for the remaining error.
+
+We then form two stepsizes:
 
 $$
-\begin{bmatrix}
-    r_k \\ \rho_k
-\end{bmatrix} := \begin{bmatrix}
-    H_k & J_k^T \\
-    J_k & 0
-\end{bmatrix} \begin{bmatrix}
-    u_k \\ y_{k}
-\end{bmatrix} + \begin{bmatrix}
-    g_k + H_k v_k \\ 0
-\end{bmatrix}.
+d_k=v_k+\beta_ku_k,
+\qquad
+x_{k+1}=x_k+\alpha_kd_k.
 $$
+The factor $\beta_k$ limits the effect of stochastic gradient noise on the tangential step, while $\alpha_k$ scales the full direction. For the finite-horizon complexity results, the paper takes $\beta_k=\eta/\sqrt K$ and chooses $\alpha_k$ from an interval determined by the problem assumptions. $\beta_k$ must be chosen before an inexact solve because it sets the solver's stopping tolerance.
 
-Unlike the common way of simply adding $u_k$ with $v_k$, we use a rescaling stepsize $\beta_k$ to control the stochastic variance introduced by the tangential step. The overall step is given by $$d_k = \beta_k u_k + v_k$$. The stepsize $\beta_k$ acts as a variance reduction technique, which helps to stabilize the iterates and improve convergence. The stepsize $\alpha_k$ is chosen from a pre-defined interval related to the problem constants. A generic algorithm framework can be summarized as follows:
+This is the key reason for using two stepsizes: reducing $\beta_k$ controls the noisy part without shrinking the constraint-oriented normal step by the same amount. It does not make the gradient estimate itself less noisy.
 
-Initialize point $x_0 \in \mathbb{R}^n$.
+## What the bounds say
 
-$\textbf{For}$ $k = 0,1,2,\dots,K$ $\textbf{do}$:
+A distinction matters when the Jacobian may be rank deficient: $\|c_k\|$ measures **actual constraint violation**, while $\|J_k^Tc_k\|$ measures **stationarity of constraint violation**. The latter can vanish at an infeasible point. For example, with $c(x)=x^2+1$, we have $J(0)^Tc(0)=0$ but $c(0)=1$.
 
-1. Compute the normal step $v_k$ by solving the trust-region subproblem.
-2. Compute the stochastic gradient estimate $g_k$.
-3. Compute the tangential step $u_k$ by solving the Newton-type system.
-4. Choose $\beta_k > 0$ and set $d_k = \beta_k u_k + v_k$.
-5. Choose stepsize $\alpha_k > 0$.
-6. Update $x_{k+1} = x_k + \alpha_k d_k$.
+The preprint gives the following iteration orders. Let $R$ be selected uniformly at random from $\{0,\ldots,K-1\}$. The guarantees are in expectation for $x_R$ (equivalently, averages over the first $K$ iterates). They do not say that every run or every iterate meets the tolerance.
 
-$\textbf{End For}$
+| Setting | Constraint-related guarantee | First-order guarantee |
+| :-- | :-- | :-- |
+| No constraint qualification, with a positive lower bound on the merit parameter | $\mathbb{E}\|J_R^Tc_R\|\leq\varepsilon_c$ in $\mathcal{O}(\varepsilon_c^{-2})$ iterations | Lagrangian-gradient error $\leq\varepsilon_L$ in $\mathcal{O}(\varepsilon_L^{-4})$ iterations |
+| Uniform LICQ along the iterates | $\mathbb{E}\|c_R\|\leq\varepsilon_c$ in $\mathcal{O}(\varepsilon_c^{-1})$ iterations | Lagrangian-gradient error $\leq\varepsilon_L$ in $\mathcal{O}(\varepsilon_L^{-4})$ iterations |
+| Merit parameter tends to zero, without a constraint qualification | $\mathbb{E}\|J_R^Tc_R\|\leq\varepsilon_c$ in $\mathcal{O}(\varepsilon_c^{-2})$ iterations | No corresponding first-order guarantee from this case |
 
-### Complexity Analysis
 
-We use a $l_2$-norm merit function to measure the progress of the algorithm:
+The first-order measure is the norm of $\nabla f(x_k)+J_k^Ty_k^{\mathrm{true}}$, with a suitable multiplier defined in the paper. Under uniform LICQ, a common positive lower bound on the relevant singular values of $J_k$ lets us control $\|c_k\|$ itself. Without that condition, a small $\|J_k^Tc_k\|$ need not mean near-feasibility. The same orders hold for inexact tangential solves under the paper's solver assumptions and residual tests; see [Sections 3–4 of the preprint](https://arxiv.org/html/2604.14351v1).
 
-$$
-\phi(x, \tau) = \tau f(x) + \|c(x)\|_2.
-$$
+The merit parameter is used to analyze progress through $\tau f(x)+\|c(x)\|$; it is not required to compute the two steps above. When its positive lower bound is unavailable, the paper still gives the constraint-stationarity bound in the last row, but does not infer that the iterates become feasible.
 
-The merit function balances the objetive and constraint violation by the merit parameter $\tau > 0$. Since no LICQ is assumed, we use the projection matrix $Z_k$ onto the null space of $J_k$ to define stationarity.
+## Numerical results
 
-A point $x$ is called an $\varepsilon_L$-stationary point if $$\|Z_k^T \nabla f(x)\|_2 \leq \varepsilon_L$$. Also, a point $x$ is called an $\varepsilon_c$-feasible point if $$\|J_k^Tc_k(x)\|_2 \leq \varepsilon_c$$. This is an extension of the traditional KKT conditions for constrained optimization problems. If LICQ holds, then $Z_k$ becomes full rank and $$\|J_k^Tc_k\|_2$$ is equivalent to $$\|c(x)\|_2$$, which recovers the standard definitions of stationarity and feasiblity.
+We compared ITSQP with two stochastic SQP baselines, SSQP and a step-lengthening version (SSQPL), on 110 equality-constrained problems from [CUTEst](https://www.numerical.rl.ac.uk/media/people/nick-gould/GoulOrbaToin15_coap.pdf). Four gradient-noise levels give 440 problem-and-noise configurations. The study considers five fixed scaling choices, 15 random seeds, and at most 10,000 iterations per run. The [paper's experiment section](https://arxiv.org/html/2604.14351v1) gives the parameter selection and stopping rules.
 
-We analyze the decrease of $\phi$ through a first-order approximation near $x$:
+For evaluation, an iterate is treated as feasible when its infinity-norm constraint error is at most $10^{-6}$. The reported KKT error uses the true objective gradient available from the test problems, rather than the noisy sample used to compute a step. This makes the plot an assessment of the resulting iterates.
 
-$$
-l(x, \tau, g, d) = \tau (f(x) + g^T d) + \|c(x) + J^T d\|_2.
-$$
+<figure>
+  <a href="{{ '/assets/img/posts/complexity%20results.png' | relative_url }}" target="_blank" rel="noopener noreferrer">
+    <img
+      src="{{ '/assets/img/posts/complexity%20results.png' | relative_url }}"
+      class="img-fluid"
+      width="2556"
+      height="1125"
+      loading="lazy"
+      alt="Boxplots of final KKT and constraint-violation errors across four noise levels for SSQP, SSQPL, and ITSQP. ITSQP generally has lower constraint violation; KKT performance varies."
+    >
+  </a>
+  <figcaption class="caption">
+    Final KKT and constraint-violation errors by noise level, on logarithmic vertical scales. Click for the full-size image.
+  </figcaption>
+</figure>
 
-$l$ serves as a surrogate model for $\phi$ at each iteration. By carefully bounding the expected decrease of $l$ ($\Delta l$) and choosing appropriate parameters, we can establish the convergence properties of the proposed method under three different cases:
+In these tests, ITSQP generally achieved lower final constraint violation, especially at higher noise levels. Its KKT error was not uniformly the lowest. Because the figure shows final errors, it does not by itself compare runtime or convergence speed.
 
-1. When no constraint qualification is assumed and the merit parameter sequence $\{\tau_k\}$ is lower bounded by a positive constant $\tau_{\min} > 0$.
-2. When LICQ holds at every iteration. (This is a sufficient condiiton for $\tau_{\min} > 0$.)
-3. When the merit parameter sequence $\{\tau_k\}$ vanishes to zero.
-
-For the first two cases, an important lemma bounds the decrease in the merit function:
-
-**Lemma:** Under suitable assumptions and parameter choice, if $\tau_k \geq \tau_{\min} > 0$ and $\alpha_k\leq 1$, we have
-
-$$
-\begin{aligned}
-    \phi(x_k+\alpha_k d_k, \tau_{\min}) - \phi(x_k, \tau_{\min}) \leq -\alpha_k \Delta l(x_k, \tau_{\min}, \nabla f(x_k), d_k^\text{true}) +  \\ \frac{\alpha_k^2\textcolor{red}{\beta_k^2}}{2}(\tau_{\min} L + \Gamma) \|u_k\|_2^2 + \frac{\alpha_k^2}{2}(\tau_{\min} L + \Gamma)\|v_k\|_2^2  +\alpha_k \tau_{\min} \nabla f(x_k)^T\textcolor{red}{(d_k - d_k^\text{true})}.
-\end{aligned}
-$$
-
-We can see that the rescaling stepsize $\beta_k$ appears in the second term on the right-hand side, which captures the variance introduced by the tangential step. Also, the term $d_k - d_k^\text{true} = \beta_k(u_k - u_k^\text{true})$ penalizes the error between the stochastic tangential step and its true counterpart. By choosing $\beta_k$ appropriately, we can control these variance terms and ensure sufficient decrease in the merit function.
-
-Based on this lemma, taking expectation and summing over $k=0,1,\dots,K-1$, we can derive the following complexity results:
-
-**Theorem:** Under suitable assumptions and parameter choices, the proposed algorithm achieves the following complexity bounds:
-
-1. If no constraint qualification is assumed and $\tau_k \geq \tau_{\min} > 0$, it needs at most $\mathcal{O}(\varepsilon_c^{-2})$ iterations to find an $\varepsilon_c$-feasible point and $\mathcal{O}(\varepsilon_L^{-4})$ iterations to find an $\varepsilon_L$-stationary point.
-2. If LICQ holds at every iteration, it needs at most $\mathcal{O}(\varepsilon_c^{-1})$ iterations to find an $\varepsilon_c$-feasible point and $\mathcal{O}(\varepsilon_L^{-4})$ iterations to find an $\varepsilon_L$-stationary point.
-
-The first worst-case infeasibility complexity result is the **first-known** result for stochastic SQP methods without any constraint qualification. The second result matches the best-known complexity for stochastic SQP methods under LICQ. For the KKT complexity, our result matches the best-known complexity for stochastic first-order methods for unconstrained optimization.
-
-For the third case where $\tau_k \to 0$, since the merit function ignores the objective function asymptotically, we can only guarantee convergence to some feasible point or stationary infeasible point:
-
-**Theorem:** Under suitable assumptions and parameter choices, if $\tau_k \to 0$ as $k \to \infty$, 
-
-$$\liminf_{k \to \infty} \|J_k^T c_k\|_2 = 0.$$
-
-### Numerical Experiments
-
-We conduct numerical experiments on a total of 110 test problems from the CUTEst library to evaluate the performance of the proposed method. We compare our inexact two-stepsize stochastic SQP method (ITSQP) with a baseline stochastic SQP method (SSQP) that does not use the rescaling stepsize $\beta_k$, as well as a step-lengthening SSQPL method. Since singularity is detected in more than half of the problems, we use the step decomposition strategy for all three algorithms.
-
-Multiple levels of stochasticity (noise follows $$\mathcal{N}(0, \epsilon_N I)$$, $$\epsilon_N\in \{10^{-4}, 10^{-3}, 10^{-2}, 10^{-1} \}$$) are injected into the gradient estimates to simulate the stochastic gradient. To ``tune" the algorithms, we tested 5 different fixed scaling stepsizes $$\beta \in \{10^{-4}, 10^{-3}, 10^{-2}, 10^{-1},1\}$$ under 15 different seeds. Therefore, a total of 440(= 110$\times$4) problems are tested, and for each problem, every algorithm is run 75(= 5$\times$15) times with different stepsizes. For the stepsize $\alpha_k$, we use the default stepsize choosing scheme for SSQP and a step-lengthening stepsize for SSQPL.
-
-For each run of the algorithm, we give a budget of 10,000 iterations and report the best iterate with the following scheme: for each iterate k, if $$\|c_k\|_\infty \leq 10^{-6}$$, we treat it as a feasible point. We pick the feasible iterate with lowest KKT error $$\|\nabla f(x_k) + J_k^Ty_k\|_\infty$$. If no feasible point is found, we pick the iterate with the lowest infeasibility error $$\|c_k\|_\infty$$ and report its KKT error as well. The KKT error and infeasibility error of the best iterates are averaged over the 15 seeds for each problem.
-
-The figures contain the KKT errors and infeasibility errors of three algorithms tested under different noise levels. For each of the 440 problems, we compared the average infeasibility errors and KKT errors over five different stepsizes, and chose the one stepsize that yields the most best results to plot the figures. It is $\alpha =1$ for SSQP and SSQPL, and $\beta_k = 10^{-3}$ for ITSQP.
-
-The results show that ITSQP outperforms both SSQP and SSQPL in terms of feasibility. The advantage becomes increasingly pronounced as the noise level increases, highlighting the superior convergence rate of our two-stepsize algorithm. The SSQP and SSQPL methods compute the merit parameter sequence $\tau_k$ and choose the stepsize based on $\tau_k$, so they achieve better KKT convergence. We argue that their lower KKT errors are obtained in the cost of computational resources. The higher KKT errors may also be attributed to the more pessimistic stepsize $\alpha_k$ we use in our algorithm.
-
-<p align="center">
-  <img
-    src="/assets/img/posts/complexity results.png"
-    width="900"
-    alt="My figure"
-  />
-</p>
-
-For more details, please check my master essay <a href="/assets/pdf/Masters_Essay_Aoji_Tang.pdf" target="_blank" rel="noopener noreferrer"> here </a>.
-
+For the assumptions, proofs, and complete experiments, see Michael J. O'Neill and Aoji Tang, “[Complexity of an inexact stochastic SQP algorithm for equality constrained optimization](https://arxiv.org/abs/2604.14351),” arXiv:2604.14351 (2026).
