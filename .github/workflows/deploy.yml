@@ -61,6 +61,10 @@ on:
       - "!README.md"
   workflow_dispatch:
 
+concurrency:
+  group: site-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
